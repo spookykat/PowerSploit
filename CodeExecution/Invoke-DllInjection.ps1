@@ -1,48 +1,5 @@
 function Invoke-DllInjection
 {
-<#
-.SYNOPSIS
-
-Injects a Dll into the process ID of your choosing.
-
-PowerSploit Function: Invoke-DllInjection  
-Author: Matthew Graeber (@mattifestation)  
-License: BSD 3-Clause  
-Required Dependencies: None  
-Optional Dependencies: None  
-
-.DESCRIPTION
-
-Invoke-DllInjection injects a Dll into an arbitrary process.
-It does this by using VirtualAllocEx to allocate memory the size of the
-DLL in the remote process, writing the names of the DLL to load into the
-remote process spacing using WriteProcessMemory, and then using RtlCreateUserThread
-to invoke LoadLibraryA in the context of the remote process.
-
-.PARAMETER ProcessID
-
-Process ID of the process you want to inject a Dll into.
-
-.PARAMETER Dll
-
-Name of the dll to inject. This can be an absolute or relative path.
-
-.EXAMPLE
-
-Invoke-DllInjection -ProcessID 4274 -Dll evil.dll
-
-Description
------------
-Inject 'evil.dll' into process ID 4274.
-
-.NOTES
-
-Use the '-Verbose' option to print detailed information.
-
-.LINK
-
-http://www.exploit-monday.com
-#>
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '')]
     [CmdletBinding()]
@@ -56,7 +13,6 @@ http://www.exploit-monday.com
         $Dll
     )
 
-    # Confirm that the process you want to inject into exists
     try
     {
         Get-Process -Id $ProcessID -ErrorAction Stop | Out-Null
@@ -66,7 +22,6 @@ http://www.exploit-monday.com
         Throw "Process does not exist!"
     }
 
-    # Confirm that the path to the dll exists
     try
     {
         $Dll = (Resolve-Path $Dll -ErrorAction Stop).Path
